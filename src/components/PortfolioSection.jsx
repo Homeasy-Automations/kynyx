@@ -20,6 +20,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import collabuilder from "../assets/clients/colla.png";
 
 // Simple cn utility
 const cn = (...inputs) => inputs.filter(Boolean).join(" ");
@@ -211,30 +212,32 @@ const PortfolioSection = () => {
         "0.8s avg load time • 43% conversion uplift • $2.1M GMV in first quarter • 99.99% payment success",
     },
     {
-      title: "Digital Marketing Engine",
+      title: "Collabuilder Collaboration Platform",
       description:
-        "End-to-end growth marketing for HOMEASY & EcoTwist across 6 social platforms.",
-      image: "/digital.png",
-      alt: "Digital Marketing Dashboard",
-      color: "from-amber-400 to-yellow-500",
+        "Smart construction collaboration platform designed to streamline project management, communication, and team workflows.",
+      image: collabuilder,
+      alt: "Collabuilder Project Management Dashboard",
+      color: "from-blue-500 to-cyan-500",
       techStack: [
-        "Google Analytics 4",
-        "Meta Ads",
-        "Mailchimp",
-        "Notion",
-        "Figma",
-        "Canva",
+        "Next.js",
+        "TypeScript",
+        "Stripe",
+        "MongoDB",
+        "Redis",
+        "Tailwind",
       ],
-      liveDemo: "https://example.com/case-study",
+      githubRepo: "https://github.com/example/collabuilder",
+      liveDemo: "https://collabuilder.com/",
       overview:
-        "Full-funnel marketing: SEO, paid ads, email, influencers, and community building.",
+        "Collabuilder enables construction teams and enterprises to manage projects efficiently through centralized communication, real-time updates, and workflow tracking.",
       challenge:
-        "Scaling brand voice across platforms while maintaining 3:1 ROAS during peak seasons.",
+        "Simplifying complex construction workflows while maintaining clarity across multiple stakeholders like contractors, engineers, and managers.",
       solution:
-        "Automated workflows with Zapier, A/B testing framework, UGC campaigns, and real-time dashboards.",
+        "Built a clean, intuitive platform with centralized dashboards, real-time collaboration tools, and structured workflow pipelines for seamless project execution.",
       results:
-        "1.2M reach • 87k new users • 340% ROI on ads • 52% email open rate • Viral TikTok campaign (4.2M views)",
+        "Improved team coordination • Reduced project delays • Better transparency • Scalable workflow system for large construction projects",
     },
+
   ];
 
   const openModal = useCallback((project) => {
