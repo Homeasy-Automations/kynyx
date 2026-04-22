@@ -153,7 +153,7 @@ export default function UltimatePortfolio() {
       </div>
 
       {/* Filter Bar */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-2xl border-b border-white/10 py-8">
+      <div className="sticky top-20 z-40 bg-black/80 backdrop-blur-2xl border-b border-white/10 py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-6">
           {filters.map((f) => (
             <button
