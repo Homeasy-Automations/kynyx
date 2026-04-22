@@ -15,14 +15,13 @@ import { Link } from "react-router-dom";
 import alexpert from "../assets/clients/ai.png";
 import bharatxin from "../assets/clients/bxi.png";
 import bharatve from "../assets/clients/bxv.png";
-import castor from "../assets/clients/cg.png";
+import castor from "../assets/clients/cas.png";
 import ecotwist from "../assets/clients/eco.png";
-import finigen from "../assets/clients/finigen.png";
-import getfit from "../assets/clients/getfit.png";
-import homeasy from "../assets/clients/homeasy (2).png";
-import kynyx from "../assets/clients/kynyx.png";
-import sumedha from "../assets/clients/sume.png";
-import udyam from "../assets/clients/uda.png";
+// import finigen from "../assets/clients/finigen.png";
+// import getfit from "../assets/clients/.png";
+import sumedha from "../assets/clients/sum.png";
+import udyam from "../assets/clients/udy.png";
+import collabuilder from "../assets/clients/colla.png";
 
 const projects = [
   {
@@ -101,10 +100,19 @@ const projects = [
       "Helping founders from idea to execution with tools and mentorship.",
     tags: ["web-development", "startup"],
     images: [udyam],
-    link: "https://udyam-tatva.vercel.app/",
+    link: "https://udyamtatva.com/",
     gradient: "from-orange-500 to-red-600",
   },
- 
+  {
+    id: 9,
+    title: "Collabuilder – Collaborative Platform",
+    description:
+      "A platform for teams to collaborate, share ideas, and build together.",
+    tags: ["web-development", "collaboration"],
+    images: [collabuilder],
+    link: "https://collabuilder.com/",
+    gradient: "from-blue-500 to-indigo-600",
+  }
 ];
 
 const filters = [
