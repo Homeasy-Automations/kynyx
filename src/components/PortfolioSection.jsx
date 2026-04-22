@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import collabuilder from "../assets/clients/colla.png";
+import ecotwist from "../assets/clients/eco.png";
+
 
 // Simple cn utility
 const cn = (...inputs) => inputs.filter(Boolean).join(" ");
@@ -189,7 +191,7 @@ const PortfolioSection = () => {
       title: "Ecotwist Innovations",
       description:
         "Sustainable e-commerce platform with lightning-fast checkout and AI recommendations.",
-      image: "/ecotwist.png",
+      image: ecotwist,
       alt: "EcoTwist E-commerce",
       color: "from-purple-600 to-indigo-500",
       techStack: [
