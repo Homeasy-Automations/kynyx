@@ -1,0 +1,23 @@
+name: Deploy Frontend to Kamatera
+
+on:
+  push:
+    branches:
+      - main  # Or your deploy branch
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /var/www/kynyx
+            git pull
+            npm install
+            npm run build
