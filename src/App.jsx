@@ -21,6 +21,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BlogManagement from "./components/BlogManagement";
 import BlogPage from "./components/BlogPage";
 import BlogDetailsPage from "./components/BlogDetailsPage";
+import WebDev from "./pages/WebDev";
+import AuditLanding from "./pages/AuditLanding";
 
 const NotFound = () => (
   <div
@@ -35,7 +37,7 @@ const NotFound = () => (
   >
     <div>
       <h1>404 - Page Not Found</h1>
-      <p>The page you're looking for doesn't exist.</p>
+      <p>The page you're looking for doesn't existn.</p>
     </div>
   </div>
 );
@@ -48,6 +50,8 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/Services/WebDev" element={<WebDev />} />
+          <Route path="/Services/AuditLanding" element={<AuditLanding />} />
           {/* <Route path="/solutions" element={<Solutions />} /> */}
           <Route path="/Services" element={<Services />} />
           <Route path="/portfolio" element={<Portfolio />} />
