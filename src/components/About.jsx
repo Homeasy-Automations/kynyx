@@ -26,7 +26,7 @@ const teamMembers = [
     name: "Aditya Kumar",
     title: "Social Media Manager",
     image: "../Aditya.png",
-    alt: "Aditya Kumar - Media Manager at Kynyx",
+    alt: "Aditya Kumar - Social Media Manager at Kynyx",
   },
   {
     name: "Amit Kumar",
