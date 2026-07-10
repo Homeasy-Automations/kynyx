@@ -26,6 +26,7 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  // eslint-disable-next-line no-unused-vars
   const [hovered, setHovered] = useState(null);
 
   return (

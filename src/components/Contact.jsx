@@ -16,8 +16,10 @@ import {
   Globe,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { API_URL as DEFAULT_API_URL } from "../../constant";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -53,6 +55,7 @@ export default function ContactPage() {
       });
       setTimeout(() => setSubmitted(false), 8000);
     } catch (err) {
+      console.error("Contact form submission failed:", err);
       alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

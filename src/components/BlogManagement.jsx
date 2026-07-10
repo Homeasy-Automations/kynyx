@@ -17,7 +17,7 @@ import {
 } from "react-icons/fi";
 import debounce from "lodash/debounce";
 import { API_URL } from "../../constant";
-import BlogDetailsModal from "./BlogDetailsModal ";
+import BlogDetailsModal from "./BlogDetailsModal";
 import  BlogPreviewModal  from "./BlogPreviewModal";
 
 const STATUS_COLOR = {
@@ -75,6 +75,7 @@ const FloatingLabel = ({
 
 const BlogManagement = () => {
   // State
+  // eslint-disable-next-line no-unused-vars
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [form, setForm] = useState({
     title: "",
@@ -109,12 +110,12 @@ const BlogManagement = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   // Auth
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  if (!token) {
-    toast.error("Please log in to access blog management");
-    return null;
-  }
+  // NOTE: read once on mount rather than on every render so a token removed
+  // mid-session (e.g. logout in another tab) doesn't change what this render
+  // computes and desync the component from ProtectedRoute's own check.
+  const [token] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("token") : null
+  );
   const auth = { headers: { Authorization: `Bearer ${token}` } };
 
   const errMsg = (e) =>
@@ -140,11 +141,16 @@ const BlogManagement = () => {
     []
   );
 
-  console.log(blogs);
-
+  // All hooks above this line must always run, regardless of auth state —
+  // conditionally calling hooks (or returning before they run) breaks
+  // React's rules of hooks and crashes the app if `token` is ever missing.
   useEffect(() => {
+    if (!token) {
+      toast.error("Please log in to access blog management");
+      return;
+    }
     fetchBlogs({ page, limit, ...filters });
-  }, [page, filters, fetchBlogs]);
+  }, [page, filters, fetchBlogs, token]);
 
   // Form Handlers
   const setField = (e) => {
@@ -335,6 +341,17 @@ const BlogManagement = () => {
     if (pagination.totalPages > 1) range.push(pagination.totalPages);
     return range;
   }, [page, pagination.totalPages]);
+
+  if (!token) {
+    return (
+      <>
+        <ToastContainer position="top-right" autoClose={3000} />
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+          <p className="text-gray-600">Please log in to access blog management.</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
