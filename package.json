@@ -18,7 +18,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@uiw/react-md-editor": "^4.0.8",
     "axios": "^1.11.0",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.42.2",
     "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.12.13",
     "lodash": "^4.17.21",

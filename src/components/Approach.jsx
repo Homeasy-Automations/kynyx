@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import { Zap, Palette, Code, Rocket, Volume2, VolumeX } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import { Link } from 'react-router-dom';
