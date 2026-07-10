@@ -6,7 +6,7 @@ import PortfolioSection from "./components/PortfolioSection";
 import Testimonials from "./components/Testimonials";
 import TechStack from "./components/TechStack";
 import WhyChooseUs from "./components/WhyChooseUs";
-import PopularBlogsSection from "./components/PopularBlogsSection";
+import PopularBlogsSection from "./components/PopularBlogsSection ";
 
 const Home = () => {
   return (

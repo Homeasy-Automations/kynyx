@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import { Zap, Palette, Code, Rocket, Volume2, VolumeX } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import { Link } from 'react-router-dom';
@@ -159,10 +159,13 @@ const Approach = () => {
               const Icon = step.icon;
               const isActive = activeStep === index;
               const isHovered = hoveredStep === index;
+              const ref = useRef(null);
+              const inView = useInView(ref, { once: false, margin: "-20%" });
 
               return (
                 <motion.div
                   id={`step-${index}`}
+                  ref={ref}
                   key={index}
                   className="relative group cursor-pointer"
                   onClick={() => scrollToStep(index)}

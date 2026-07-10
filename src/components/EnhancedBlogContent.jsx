@@ -9,7 +9,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 // Custom components for ReactMarkdown
 const MarkdownComponents = {
   // Code blocks with syntax highlighting
-  code({ inline, className, children, ...props }) {
+  code({ node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
       <SyntaxHighlighter
@@ -67,10 +67,11 @@ const MarkdownComponents = {
   // Images
   img: ({ src, alt }) => (
     <div className="my-6">
-      <img
-        src={src}
+      <Image 
+        src={src} 
         alt={alt}
-        loading="lazy"
+        width={600}
+        height={400}
         className="w-full max-w-2xl mx-auto rounded-lg shadow-md object-cover"
       />
       {alt && (
@@ -228,7 +229,7 @@ const EnhancedBlogContent = ({ blog, className = "" }) => {
       </div>
 
       {/* Global Styles for the blog content */}
-      <style>{`
+      <style jsx>{`
         .blog-content-wrapper {
           max-width: 100%;
           overflow-x: auto;

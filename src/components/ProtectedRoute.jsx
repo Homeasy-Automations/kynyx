@@ -14,7 +14,6 @@ const ProtectedRoute = ({ children }) => {
     }
     return children;
   } catch (err) {
-    console.error("Invalid or expired token:", err);
     localStorage.removeItem('token');
     return <Navigate to="/login" />;
   }

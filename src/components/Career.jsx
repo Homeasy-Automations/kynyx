@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../constant";
+
+const API_URL = ""; // Add your backend URL
 
 const Career = () => {
   const [position, setPosition] = useState("");

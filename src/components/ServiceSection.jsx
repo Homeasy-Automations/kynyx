@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   motion,
   useInView,
   useScroll,
   useTransform,
+  useSpring,
   useMotionValue,
   useMotionTemplate,
 } from "framer-motion";

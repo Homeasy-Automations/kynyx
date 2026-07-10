@@ -539,7 +539,7 @@ const PortfolioSection = () => {
       )}
 
       {/* CSS Animations */}
-      <style>{`
+      <style jsx>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

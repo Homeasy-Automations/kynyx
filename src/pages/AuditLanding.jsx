@@ -327,7 +327,6 @@ const MarkedUpPage = () => (
 /* ------------------------------------------------------------------ */
 
 const AuditServiceLanding = () => {
-  // eslint-disable-next-line no-unused-vars
   const [navOpen, setNavOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [form, setForm] = useState({ name: "", email: "", website: "", message: "" });

@@ -6,11 +6,10 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: {
-    host:true,
-    port: 8080,
+  optimizeDeps: {
+    include: ['flowbite']
   },
-  preview: {
+  server: {
     host:true,
     port: 8080,
   }

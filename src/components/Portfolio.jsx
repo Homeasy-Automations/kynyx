@@ -250,7 +250,7 @@ export default function UltimatePortfolio() {
 }
 
 // Project Card — no 3D tilt, no AnimatePresence, clean hover
-const ProjectCard = ({ project, index: _index, isHovered, onHover, onLeave }) => {
+const ProjectCard = ({ project, index, isHovered, onHover, onLeave }) => {
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
@@ -307,7 +307,7 @@ const ProjectCard = ({ project, index: _index, isHovered, onHover, onLeave }) =>
 };
 
 // Stat Card — count-up animation on scroll (no framer-motion)
-const StatCard = ({ stat, delay: _delay }) => {
+const StatCard = ({ stat, delay }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });

@@ -15,7 +15,7 @@ import {
   Layout,
   Code,
   Cpu,
-  Infinity as InfinityIcon,
+  Infinity,
   Quote,
   Star,
   Menu,
@@ -90,7 +90,6 @@ const NAV_LINKS = [
 ];
 
 const WebDev = () => {
-  // eslint-disable-next-line no-unused-vars
   const [navOpen, setNavOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); // idle | submitting | success
@@ -117,7 +116,7 @@ const WebDev = () => {
       span: "col-span-1",
     },
     {
-      icon: InfinityIcon,
+      icon: Infinity,
       title: "Infinite Scalability",
       desc: "Architectures built on AWS and Vercel that grow with your revenue.",
       span: "col-span-1 md:col-span-2 row-span-2 bg-gradient-to-br from-indigo-900/20 to-purple-900/20",

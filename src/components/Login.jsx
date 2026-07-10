@@ -18,7 +18,6 @@ const Login = () => {
       localStorage.setItem("token", res.data.token);
       navigate("/blog");
     } catch (err) {
-      console.error("Login failed:", err);
       setError("Invalid credentials");
     }
   };

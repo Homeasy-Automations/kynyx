@@ -11,7 +11,6 @@ import { FaWhatsapp } from "react-icons/fa";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [isSticky, setIsSticky] = useState(false);
   const [hideIcons, setHideIcons] = useState(false);
 
