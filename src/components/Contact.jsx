@@ -206,7 +206,7 @@ export default function ContactPage() {
                     <Phone className="w-10 h-10 text-cyan-400" />
                     <div>
                       <p className="text-sm text-gray-400">Call Us</p>
-                      <p className="font-bold">+1 (239) 450-6273</p>
+                      <p className="font-bold">+91 (239) 450-6273</p>
                     </div>
                   </a>
 
