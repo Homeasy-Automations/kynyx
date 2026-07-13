@@ -168,7 +168,7 @@ const PopularBlogsSection = () => {
             to="/blog-page"
             className="group flex items-center gap-3 text-indigo-400 hover:text-indigo-300 font-semibold text-lg transition-all hover:gap-5"
           >
-            <span>View All Article</span>
+            <span>View All Articles</span>
             <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
           </Link>
         </motion.div>
