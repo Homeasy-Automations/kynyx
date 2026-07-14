@@ -229,7 +229,7 @@ const EnhancedBlogContent = ({ blog, className = "" }) => {
       </div>
 
       {/* Global Styles for the blog content */}
-      <style jsx>{`
+      <style>{`
         .blog-content-wrapper {
           max-width: 100%;
           overflow-x: auto;
