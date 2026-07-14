@@ -34,12 +34,12 @@ const teamMembers = [
     image: "../Amit1.png",
     alt: "Amit Kumar - Full-Stack Developer at Kynyx",
   },
-  {
-    name: "Hrithik Kumar",
-    title: "Frontend Developer",
-    image: "../hritik.png",
-    alt: "Hrithik Kumar - Frontend Developer at Kynyx",
-  },
+  // {
+  //   name: "Hrithik Kumar",
+  //   title: "Frontend Developer",
+  //   image: "../hritik.png",
+  //   alt: "Hrithik Kumar - Frontend Developer at Kynyx",
+  // },
 ];
 
 const values = [
