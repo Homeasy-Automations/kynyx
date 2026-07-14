@@ -23,9 +23,9 @@ const teamMembers = [
     alt: "Vike - Founder & CEO of Kynyx Solutions",
   },
   {
-    name: "Aditya Kumar",
+    name: "Kundan Kumar",
     title: "Social Media Manager",
-    image: "../Aditya.png",
+    image: "../kundan.png",
     alt: "Aditya Kumar - Media Manager at Kynyx",
   },
   {
