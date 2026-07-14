@@ -241,7 +241,7 @@ export default function AboutPage() {
               Passionate experts obsessed with your success
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
               {teamMembers.map((member, i) => (
                 <motion.div
                   key={i}
