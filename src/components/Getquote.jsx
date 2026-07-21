@@ -24,6 +24,7 @@ const BookConsultationForm = ({ onClose }) => {
 
   const [selectedCountry, setSelectedCountry] = useState("US"); // default country ISO code
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
   const servicesList = [
@@ -43,50 +44,119 @@ const BookConsultationForm = ({ onClose }) => {
     };
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-
-    if (type === "checkbox" && name === "agree") {
-      setFormData((prev) => ({ ...prev, agree: checked }));
-    } else if (type === "checkbox" && name === "services") {
-      const updatedServices = checked
-        ? [...formData.services, value]
-        : formData.services.filter((s) => s !== value);
-      setFormData((prev) => ({ ...prev, services: updatedServices }));
-    } else if (type === "file") {
-      setFormData((prev) => ({ ...prev, file: files?.[0] || null }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+  // Returns an error message for a single field, or "" if valid
+  const validateField = (name, data) => {
+    switch (name) {
+      case "name":
+        return data.name.trim() ? "" : "Full Name is required";
+      case "email":
+        return data.email.includes("@") && /\S+@\S+\.\S+/.test(data.email)
+          ? ""
+          : "Invalid email address";
+      case "phone": {
+        const phoneNumber = parsePhoneNumberFromString(data.phoneWithDialCode || "");
+        return phoneNumber && phoneNumber.isValid()
+          ? ""
+          : "Invalid phone number for selected country";
+      }
+      case "company":
+        return data.company.trim() ? "" : "Company name is required";
+      case "website":
+        if (!data.website) return ""; // optional field
+        try {
+          new URL(data.website);
+          return "";
+        } catch {
+          return "Enter a valid URL (e.g. https://example.com)";
+        }
+      case "services":
+        return data.services.length ? "" : "Select at least one service";
+      case "otherService":
+        return data.services.includes("Other") && !data.otherService.trim()
+          ? "Specify the other service"
+          : "";
+      case "agree":
+        return data.agree ? "" : "You must agree to the privacy policy";
+      default:
+        return "";
     }
   };
 
   const validate = () => {
+    const fields = [
+      "name",
+      "email",
+      "phone",
+      "company",
+      "website",
+      "services",
+      "otherService",
+      "agree",
+    ];
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Full Name is required";
-    if (!formData.email.includes("@")) newErrors.email = "Invalid email address";
-
-    // Validate phone using libphonenumber-js
-    const phoneNumber = parsePhoneNumberFromString(formData.phoneWithDialCode);
-    if (!phoneNumber || !phoneNumber.isValid()) {
-      newErrors.phone = "Invalid phone number for selected country";
-    }
-
-    if (!formData.company) newErrors.company = "Company name is required";
-    if (!formData.services.length)
-      newErrors.services = "Select at least one service";
-    if (formData.services.includes("Other") && !formData.otherService)
-      newErrors.otherService = "Specify the other service";
-    if (!formData.agree)
-      newErrors.agree = "You must agree to the privacy policy";
-
+    fields.forEach((field) => {
+      const msg = validateField(field, formData);
+      if (msg) newErrors[field] = msg;
+    });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+
+    let updated;
+    if (type === "checkbox" && name === "agree") {
+      updated = { ...formData, agree: checked };
+    } else if (type === "checkbox" && name === "services") {
+      const updatedServices = checked
+        ? [...formData.services, value]
+        : formData.services.filter((s) => s !== value);
+      updated = { ...formData, services: updatedServices };
+    } else if (type === "file") {
+      updated = { ...formData, file: files?.[0] || null };
+    } else {
+      updated = { ...formData, [name]: value };
+    }
+
+    setFormData(updated);
+
+    // Live-revalidate any field the user has already interacted with
+    if (touched[name]) {
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, updated) }));
+    }
+  };
+
+  const handleBlur = (name) => {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, formData) }));
+  };
+
+  // "" = untouched, "valid", or "invalid" — drives the red/green border
+  const fieldStatus = (name) => {
+    if (!touched[name]) return "";
+    return errors[name] ? "invalid" : "valid";
+  };
+
+  const borderClass = (name) => {
+    const status = fieldStatus(name);
+    if (status === "valid") return "border-2 border-green-500";
+    if (status === "invalid") return "border-2 border-red-500";
+    return "border border-gray-300";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    e.preventDefault();
+    setTouched({
+      name: true,
+      email: true,
+      phone: true,
+      company: true,
+      website: true,
+      services: true,
+      otherService: true,
+      agree: true,
+    });
     if (!validate()) return;
 
     // Format phone to E.164 before sending
@@ -100,12 +170,9 @@ const BookConsultationForm = ({ onClose }) => {
     // Remove these as they are now redundant
     delete payload.phoneWithDialCode;
     delete payload.countryCode;
-  
 
     const formDataToSend = new FormData();
-    
 
-  
     for (const key in payload) {
       if (key === "services") {
         formDataToSend.append("services", payload.services.join(", "));
@@ -116,7 +183,6 @@ const BookConsultationForm = ({ onClose }) => {
       }
     }
 
-    
     try {
       const response = await axios.post(
         "https://api.kynyx.com/api/get-quote",
@@ -170,7 +236,7 @@ const BookConsultationForm = ({ onClose }) => {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
 
             {/* Full Name & Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -181,12 +247,12 @@ const BookConsultationForm = ({ onClose }) => {
                   placeholder="Full Name *"
                   value={formData.name}
                   onChange={handleChange}
-                  className="bg-white text-black px-4 py-2 rounded w-full"
+                  onBlur={() => handleBlur("name")}
+                  className={`bg-white text-black px-4 py-2 rounded w-full ${borderClass(
+                    "name"
+                  )}`}
                 />
-                {errors.name && (
-                  <p className="text-red-400 text-sm">{errors.name}</p>
-                )}
-                {errors.name && (
+                {fieldStatus("name") === "invalid" && (
                   <p className="text-red-400 text-sm">{errors.name}</p>
                 )}
               </div>
@@ -198,41 +264,53 @@ const BookConsultationForm = ({ onClose }) => {
                   placeholder="Email Address *"
                   value={formData.email}
                   onChange={handleChange}
-                  className="bg-white text-black px-4 py-2 rounded w-full"
+                  onBlur={() => handleBlur("email")}
+                  className={`bg-white text-black px-4 py-2 rounded w-full ${borderClass(
+                    "email"
+                  )}`}
                 />
-                {errors.email && (
-                  <p className="text-red-400 text-sm">{errors.email}</p>
-                )}
-                {errors.email && (
+                {fieldStatus("email") === "invalid" && (
                   <p className="text-red-400 text-sm">{errors.email}</p>
                 )}
               </div>
             </div>
 
-            {/* Replace your old country selector + phone input with this PhoneInput */}
+            {/* Phone */}
             <div>
-              {/* <label className="block mb-2 font-semibold">Phone Number *</label> */}
               <PhoneInput
                 country={selectedCountry.toLowerCase()}
                 value={formData.phone.replace('+', '')}
-               onChange={(phone, country) => {
-                 setFormData((prev) => ({
-                   ...prev,
-                   phoneWithDialCode: `+${phone}`,
-                  }));
+                onChange={(phone, country) => {
+                  const updated = {
+                    ...formData,
+                    phoneWithDialCode: `+${phone}`,
+                  };
+                  setFormData(updated);
                   setSelectedCountry(country.countryCode.toUpperCase());
+                  if (touched.phone) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      phone: validateField("phone", updated),
+                    }));
+                  }
                 }}
+                onBlur={() => handleBlur("phone")}
                 enableSearch
                 placeholder="Enter phone number*"
                 inputStyle={{
                   width: '100%',
                   height: '42px',
                   fontSize: '1rem',
-                 backgroundColor: 'white',
+                  backgroundColor: 'white',
                   color: 'black',
-                 borderRadius: '0.375rem',
-                 padding: '0.1rem 2.5rem',
-                 border: '1px solid #d1d5db',
+                  borderRadius: '0.375rem',
+                  padding: '0.1rem 2.5rem',
+                  border:
+                    fieldStatus("phone") === "invalid"
+                      ? '2px solid #ef4444'
+                      : fieldStatus("phone") === "valid"
+                      ? '2px solid #22c55e'
+                      : '1px solid #d1d5db',
                   boxSizing: 'border-box',
                 }}
                 buttonStyle={{
@@ -248,7 +326,7 @@ const BookConsultationForm = ({ onClose }) => {
                 }}
               />
 
-              {errors.phone && (
+              {fieldStatus("phone") === "invalid" && (
                 <p className="text-red-400 text-sm mt-1">{errors.phone}</p>
               )}
             </div>
@@ -261,29 +339,48 @@ const BookConsultationForm = ({ onClose }) => {
                 placeholder="Company Name *"
                 value={formData.company}
                 onChange={handleChange}
-                className="bg-white text-black px-4 py-2 rounded w-full"
+                onBlur={() => handleBlur("company")}
+                className={`bg-white text-black px-4 py-2 rounded w-full ${borderClass(
+                  "company"
+                )}`}
               />
-              {errors.company && (
+              {fieldStatus("company") === "invalid" && (
                 <p className="text-red-400 text-sm">{errors.company}</p>
               )}
             </div>
 
             {/* Website */}
-            <input
-              type="url"
-              name="website"
-              placeholder="Website URL"
-              value={formData.website}
-              onChange={handleChange}
-              className="bg-white text-black px-4 py-2 rounded w-full"
-            />
+            <div>
+              <input
+                type="url"
+                name="website"
+                placeholder="Website URL"
+                value={formData.website}
+                onChange={handleChange}
+                onBlur={() => handleBlur("website")}
+                className={`bg-white text-black px-4 py-2 rounded w-full ${borderClass(
+                  "website"
+                )}`}
+              />
+              {fieldStatus("website") === "invalid" && (
+                <p className="text-red-400 text-sm">{errors.website}</p>
+              )}
+            </div>
 
             {/* Services */}
             <div>
               <label className="block mb-2 font-semibold">
                 Services you're interested in: *
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div
+                className={`grid grid-cols-1 md:grid-cols-2 gap-2 p-2 rounded ${
+                  fieldStatus("services") === "invalid"
+                    ? "border-2 border-red-500"
+                    : fieldStatus("services") === "valid"
+                    ? "border-2 border-green-500"
+                    : ""
+                }`}
+              >
                 {servicesList.map((service) => (
                   <label key={service} className="flex items-center gap-2">
                     <input
@@ -292,26 +389,32 @@ const BookConsultationForm = ({ onClose }) => {
                       value={service}
                       checked={formData.services.includes(service)}
                       onChange={handleChange}
+                      onBlur={() => handleBlur("services")}
                     />
                     {service}
                   </label>
                 ))}
               </div>
-              {errors.services && (
+              {fieldStatus("services") === "invalid" && (
                 <p className="text-red-400 text-sm">{errors.services}</p>
               )}
-                            {formData.services.includes("Other") && (
-                <input
-                  type="text"
-                  name="otherService"
-                  placeholder="Please specify other service *"
-                  value={formData.otherService}
-                  onChange={handleChange}
-                  className="bg-white text-black px-4 py-2 rounded w-full mt-2"
-                />
-              )}
-              {errors.otherService && (
-                <p className="text-red-400 text-sm">{errors.otherService}</p>
+              {formData.services.includes("Other") && (
+                <>
+                  <input
+                    type="text"
+                    name="otherService"
+                    placeholder="Please specify other service *"
+                    value={formData.otherService}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur("otherService")}
+                    className={`bg-white text-black px-4 py-2 rounded w-full mt-2 ${borderClass(
+                      "otherService"
+                    )}`}
+                  />
+                  {fieldStatus("otherService") === "invalid" && (
+                    <p className="text-red-400 text-sm">{errors.otherService}</p>
+                  )}
+                </>
               )}
             </div>
 
@@ -322,7 +425,7 @@ const BookConsultationForm = ({ onClose }) => {
               rows={4}
               value={formData.projectDetails}
               onChange={handleChange}
-              className="bg-white text-black px-4 py-2 rounded w-full"
+              className="bg-white text-black px-4 py-2 rounded w-full border border-gray-300"
             />
 
             {/* Budget */}
@@ -332,7 +435,7 @@ const BookConsultationForm = ({ onClose }) => {
               placeholder="Budget"
               value={formData.budget}
               onChange={handleChange}
-              className="bg-white text-black px-4 py-2 rounded w-full"
+              className="bg-white text-black px-4 py-2 rounded w-full border border-gray-300"
             />
 
             {/* File Upload */}
@@ -352,10 +455,21 @@ const BookConsultationForm = ({ onClose }) => {
                 name="agree"
                 checked={formData.agree}
                 onChange={handleChange}
+                onBlur={() => handleBlur("agree")}
               />
-              I agree to the privacy policy *
+              <span
+                className={
+                  fieldStatus("agree") === "invalid"
+                    ? "text-red-400"
+                    : fieldStatus("agree") === "valid"
+                    ? "text-green-400"
+                    : ""
+                }
+              >
+                I agree to the privacy policy *
+              </span>
             </label>
-            {errors.agree && (
+            {fieldStatus("agree") === "invalid" && (
               <p className="text-red-400 text-sm">{errors.agree}</p>
             )}
 
@@ -374,4 +488,3 @@ const BookConsultationForm = ({ onClose }) => {
 };
 
 export default BookConsultationForm;
-

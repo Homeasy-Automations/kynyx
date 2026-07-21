@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 import axios from "axios";
 import {
   Mail,
@@ -29,8 +29,50 @@ export default function ContactPage() {
     service: "",
     message: "",
   });
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Validation rules per field
+  const validators = {
+    name: (v) => v.trim().length >= 2,
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+    phone: (v) => /^[0-9+\-\s()]{7,20}$/.test(v.trim()),
+    company: (v) => v.trim().length >= 2,
+    service: (v) => v.trim() !== "",
+    message: (v) => v.trim().length >= 10,
+  };
+
+  const errorMessages = {
+    name: "Name must be at least 2 characters — invalid.",
+    email: "Enter a valid email address — invalid.",
+    phone: "Enter a valid phone number — invalid.",
+    company: "Company name must be at least 2 characters — invalid.",
+    service: "Please select a service — invalid.",
+    message: "Message must be at least 10 characters — invalid.",
+  };
+
+  // "" = untouched/empty, "valid", or "invalid"
+  const fieldStatus = (field) => {
+    const value = formData[field];
+    if (!touched[field] || value.trim() === "") return "";
+    return validators[field](value) ? "valid" : "invalid";
+  };
+
+  const statusBorderClasses = (field) => {
+    const status = fieldStatus(field);
+    if (status === "valid")
+      return "border-green-500 focus:border-green-500 focus:ring-green-500/20";
+    if (status === "invalid")
+      return "border-red-500 focus:border-red-500 focus:ring-red-500/20";
+    return "border-gray-700 focus:border-cyan-500 focus:ring-cyan-500/20";
+  };
+
+  const handleBlur = (field) => setTouched((t) => ({ ...t, [field]: true }));
+
+  const isFormValid = Object.keys(validators).every((field) =>
+    validators[field](formData[field])
+  );
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,12 +80,25 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Mark everything touched so any invalid field turns red immediately
+    setTouched({
+      name: true,
+      email: true,
+      phone: true,
+      company: true,
+      service: true,
+      message: true,
+    });
+
+    if (!isFormValid) return;
+
     setLoading(true);
 
     try {
       await axios.post(`${API_URL}/api/contact/send-message`, formData);
       setSubmitted(true);
-      
+
       setFormData({
         name: "",
         email: "",
@@ -52,6 +107,7 @@ export default function ContactPage() {
         service: "",
         message: "",
       });
+      setTouched({});
       setTimeout(() => setSubmitted(false), 8000);
     } catch (err) {
       alert("Something went wrong. Please try again.");
@@ -206,7 +262,7 @@ export default function ContactPage() {
                     <Phone className="w-10 h-10 text-cyan-400" />
                     <div>
                       <p className="text-sm text-gray-400">Call Us</p>
-                      <p className="font-bold">+91 (239) 450-6273</p>
+                      <p className="font-bold">+1 (239) 450-6273</p>
                     </div>
                   </a>
 
@@ -257,14 +313,22 @@ export default function ContactPage() {
                         name={field}
                         value={formData[field]}
                         onChange={handleChange}
+                        onBlur={() => handleBlur(field)}
                         required
                         placeholder={`Your ${
                           field === "company"
                             ? "Company"
                             : field.charAt(0).toUpperCase() + field.slice(1)
                         }`}
-                        className="w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border border-gray-700 rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder-gray-500 text-white"
+                        className={`w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border-2 rounded-2xl focus:outline-none focus:ring-2 transition-all placeholder-gray-500 text-white ${statusBorderClasses(
+                          field
+                        )}`}
                       />
+                      {fieldStatus(field) === "invalid" && (
+                        <p className="text-red-500 text-sm mt-2">
+                          {errorMessages[field]}
+                        </p>
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -274,8 +338,11 @@ export default function ContactPage() {
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
+                    onBlur={() => handleBlur("service")}
                     required
-                    className="w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border border-gray-700 rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all text-white"
+                    className={`w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border-2 rounded-2xl focus:outline-none focus:ring-2 transition-all text-white ${statusBorderClasses(
+                      "service"
+                    )}`}
                   >
                     <option value="">Select a Service</option>
                     <option value="web">Custom Web Development</option>
@@ -284,6 +351,11 @@ export default function ContactPage() {
                     <option value="marketing">Digital Marketing</option>
                     <option value="all">All Services</option>
                   </select>
+                  {fieldStatus("service") === "invalid" && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errorMessages.service}
+                    </p>
+                  )}
                 </motion.div>
 
                 <motion.div whileHover={{ y: -4 }}>
@@ -291,11 +363,19 @@ export default function ContactPage() {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
+                    onBlur={() => handleBlur("message")}
                     required
                     rows={6}
                     placeholder="Tell us about your project..."
-                    className="w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border border-gray-700 rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder-gray-500 text-white resize-none"
+                    className={`w-full px-6 py-5 bg-gray-900/50 backdrop-blur-xl border-2 rounded-2xl focus:outline-none focus:ring-2 transition-all placeholder-gray-500 text-white resize-none ${statusBorderClasses(
+                      "message"
+                    )}`}
                   />
+                  {fieldStatus("message") === "invalid" && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errorMessages.message}
+                    </p>
+                  )}
                 </motion.div>
 
                 <motion.button
