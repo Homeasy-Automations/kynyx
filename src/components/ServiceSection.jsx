@@ -41,7 +41,7 @@ const services = [
     description: "Native iOS & Android with flawless UX.",
     icon: Smartphone,
     gradient: "from-purple-500 to-pink-600",
-    layout: "md:col-span-1", // Standard Card
+    layout: "md:col-span-1 md:row-span-2", // Standard Card
     href: "/Services#mobile-development", // Link to Services section
   },
   {
