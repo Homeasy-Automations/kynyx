@@ -241,7 +241,7 @@ export default function AboutPage() {
               Passionate experts obsessed with your success
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
               {teamMembers.map((member, i) => (
                 <motion.div
                   key={i}
@@ -255,7 +255,7 @@ export default function AboutPage() {
                   <img
                     src={member.image}
                     alt={member.alt}
-                    className="w-full h-72 rounded-2xl shadow-2xl object-cover border-4 border-gray-800 group-hover:border-cyan-500 transition-all"
+                    className="w-full h-100 rounded-2xl shadow-2xl object-cover border-4 border-gray-800 group-hover:border-cyan-500 transition-all"
                   />
                   <div className="mt-6">
                     <h3 className="text-xl font-bold">{member.name}</h3>
