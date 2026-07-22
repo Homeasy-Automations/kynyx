@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   motion,
   useInView,
   useScroll,
   useTransform,
-  useSpring,
   useMotionValue,
   useMotionTemplate,
 } from "framer-motion";
@@ -33,7 +32,7 @@ const services = [
     icon: Code2,
     gradient: "from-cyan-500 to-blue-600",
     layout: "md:col-span-2", // Wide Card
-    href: "/Services/WebDev", // Link to Services section
+    href: "/Services/WebDev",
   },
   {
     id: "mobile",
@@ -41,8 +40,8 @@ const services = [
     description: "Native iOS & Android with flawless UX.",
     icon: Smartphone,
     gradient: "from-purple-500 to-pink-600",
-    layout: "md:col-span-1 md:row-span-2", // Standard Card
-    href: "/Services#mobile-development", // Link to Services section
+    layout: "md:col-span-1", // Standard Card
+    href: "/Services#mobile-development",
   },
   {
     id: "audit",
@@ -50,10 +49,8 @@ const services = [
     description: "Deep technical audits for SEO, security, and performance.",
     icon: SearchCheck,
     gradient: "from-orange-500 to-red-600",
-    layout: "md:row-span-2 md:col-span-1",
-    href: "/Services/AuditLanding", // Link to Services section
-    // Tall Card (Hero)
-    // Extra data for Audit
+    layout: "md:row-span-2 md:col-span-1", // Tall Card (Hero)
+    href: "/Services/AuditLanding",
     details: [
       "Core Web Vitals",
       "Security Headers",
@@ -68,9 +65,17 @@ const services = [
     icon: TrendingUp,
     gradient: "from-emerald-500 to-teal-600",
     layout: "md:col-span-2", // Wide Card
-    href: "/Services#digital-marketing", // Link to Services section
+    href: "/Services#digital-marketing",
   },
 ];
+
+// Standalone decorative image tile that fills the empty grid slot
+// left over next to the Digital Marketing card. Not part of any
+// service card — purely visual.
+const fillerImage = {
+  src: "https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
+  alt: "Team collaborating on a digital project",
+};
 
 // --- Component: Spotlight Card Wrapper ---
 function CardWrapper({ className, children }) {
@@ -114,81 +119,104 @@ const ServiceCard = ({ service, index }) => {
   return (
     <CardWrapper className={cn(service.layout, "h-full")}>
       <Link to={service.href} className="block h-full">
-      
-      
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="relative h-full bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-colors duration-300"
-      >
-        {/* Gradient Top Bar */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient}`}
-        />
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: index * 0.1 }}
+          className="relative h-full bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-colors duration-300"
+        >
+          {/* Gradient Top Bar */}
+          <div
+            className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient}`}
+          />
 
-        <div className="p-8 h-full flex flex-col relative z-10">
-          {/* Header */}
-          <div className="mb-6">
-            <motion.div
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6, type: "spring" }}
-              className={`w-12 h-12 rounded-lg bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white shadow-lg mb-4`}
-            >
-              <service.icon size={24} />
-            </motion.div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-              {service.title}
-            </h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              {service.description}
-            </p>
-          </div>
+          <div className="p-8 h-full flex flex-col relative z-10">
+            {/* Header */}
+            <div className="mb-6">
+              <motion.div
+                whileHover={{ rotate: 360, scale: 1.1 }}
+                transition={{ duration: 0.6, type: "spring" }}
+                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white shadow-lg mb-4`}
+              >
+                <service.icon size={24} />
+              </motion.div>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {service.title}
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                {service.description}
+              </p>
+            </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col justify-end">
-            {service.details ? (
-              // Special View for Audit Card (Reveal Details)
-              <div className="space-y-3">
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                  Key Checks
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col justify-end">
+              {service.details ? (
+                // Special View for Audit Card (Reveal Details)
+                <div className="space-y-3">
+                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    Key Checks
+                  </div>
+                  {service.details.map((detail, i) => (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      whileHover={{ x: 0 }}
+                      key={i}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
+                      <Zap size={14} className="text-orange-400" />
+                      {detail}
+                    </motion.div>
+                  ))}
                 </div>
-                {service.details.map((detail, i) => (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    whileHover={{ x: 0 }}
-                    key={i}
-                    className="flex items-center gap-2 text-sm text-gray-300"
-                  >
-                    <Zap size={14} className="text-orange-400" />
-                    {detail}
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              // Standard View for others
-              <div className="hidden group-hover:flex flex-col gap-2 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
-                <CheckCircle2 size={20} className="text-cyan-400" />
-                <span className="text-sm font-medium text-cyan-400">
-                  Available for Q4 2023
-                </span>
-              </div>
-            )}
-          </div>
+              ) : (
+                // Standard View for others
+                <div className="hidden group-hover:flex flex-col gap-2 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                  <CheckCircle2 size={20} className="text-cyan-400" />
+                  <span className="text-sm font-medium text-cyan-400">
+                    Available for Q4 2023
+                  </span>
+                </div>
+              )}
+            </div>
 
-          {/* Arrow CTA */}
-          <motion.div className="mt-6 flex items-center gap-2 text-white/50 group-hover:text-white transition-colors">
-            <span className="text-sm font-medium">Explore</span>
-            <ArrowRight
-              size={16}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </motion.div>
-        </div>
-      </motion.div>
+            {/* Arrow CTA */}
+            <motion.div className="mt-6 flex items-center gap-2 text-white/50 group-hover:text-white transition-colors">
+              <span className="text-sm font-medium">Explore</span>
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </motion.div>
+          </div>
+        </motion.div>
       </Link>
     </CardWrapper>
+  );
+};
+
+// --- Component: Standalone Filler Image Tile ---
+// Sits in the leftover grid slot next to Digital Marketing —
+// a separate visual element, not attached to any service card.
+const FillerImageTile = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="relative rounded-2xl overflow-hidden border border-white/10 min-h-[200px] md:min-h-0"
+    >
+      <img
+        src={fillerImage.src}
+        alt={fillerImage.alt}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/20 to-transparent" />
+    </motion.div>
   );
 };
 
@@ -234,11 +262,13 @@ const ServiceSection = () => {
           </p>
         </motion.div>
 
-        {/* Bento Grid Layout */}
+        {/* Bento Grid Layout — original layout restored */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(280px,auto)]">
           {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
+          {/* Standalone image filling the leftover space next to Digital Marketing */}
+          <FillerImageTile />
         </div>
 
         {/* Bottom CTA Text */}
