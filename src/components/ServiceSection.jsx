@@ -41,7 +41,7 @@ const services = [
     description: "Native iOS & Android with flawless UX.",
     icon: Smartphone,
     gradient: "from-purple-500 to-pink-600",
-    layout: "md:col-span-1 md:row-span-2", // Standard Card
+    layout: "md:col-span-1", // Standard Card
     href: "/Services#mobile-development", // Link to Services section
   },
   {
@@ -69,6 +69,15 @@ const services = [
     gradient: "from-emerald-500 to-teal-600",
     layout: "md:col-span-2", // Wide Card
     href: "/Services#digital-marketing", // Link to Services section
+  },
+  {
+    id:"UI/UX-Design",
+    title: "UI/UX Design & Branding",
+    description: "Pixel-perfect interfaces and unforgettable UX.",
+    icon: CheckCircle2,
+    gradient: "from-red-500 to-pink-600",
+    layout: "md:col-span-1", // Standard Card
+    href: "/Services#ui-ux-design", // Link to Services section
   },
 ];
 
