@@ -29,7 +29,7 @@ export default function Hero() {
       setStats({
         projects: 50,
         clients: 35,
-        rating: 5,
+        rating: 4.8,
         uptime: 99.9,
       });
     }, 800);

@@ -22,7 +22,7 @@ const approachSteps = [
   {
     step: "1",
     title: "Discovery",
-    description: "We listen deeply to your vision and map out a strategic roadmap.",
+    description: "We listen deeply to your vision and make strategic roadmap.",
     icon: Zap,
     color: "from-purple-500 to-pink-500",
     details: "Stakeholder interviews • Market analysis • Goal alignment",
