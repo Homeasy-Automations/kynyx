@@ -14,6 +14,8 @@ import {
   Code2,
   Smartphone,
   TrendingUp,
+  Palette,
+  Cloud,
   ArrowRight,
   SearchCheck,
   CheckCircle2,
@@ -23,7 +25,7 @@ import {
 // --- Utility ---
 const cn = (...inputs) => inputs.filter(Boolean).join(" ");
 
-// --- Data ---
+// --- Data --- (6 services, all equally sized, each with its own background photo)
 const services = [
   {
     id: "web",
@@ -31,8 +33,10 @@ const services = [
     description: "High-performance, scalable SaaS and marketing platforms.",
     icon: Code2,
     gradient: "from-cyan-500 to-blue-600",
-    layout: "md:col-span-2", // Wide Card
     href: "/Services/WebDev",
+    badge: "Available for Q4 2023",
+    bgImage:
+      "https://images.pexels.com/photos/270632/pexels-photo-270632.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
   },
   {
     id: "mobile",
@@ -40,8 +44,10 @@ const services = [
     description: "Native iOS & Android with flawless UX.",
     icon: Smartphone,
     gradient: "from-purple-500 to-pink-600",
-    layout: "md:col-span-1", // Standard Card
     href: "/Services#mobile-development",
+    badge: "iOS & Android ready",
+    bgImage:
+      "https://images.pexels.com/photos/409581/pexels-photo-409581.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
   },
   {
     id: "audit",
@@ -49,7 +55,6 @@ const services = [
     description: "Deep technical audits for SEO, security, and performance.",
     icon: SearchCheck,
     gradient: "from-orange-500 to-red-600",
-    layout: "md:row-span-2 md:col-span-1", // Tall Card (Hero)
     href: "/Services/AuditLanding",
     details: [
       "Core Web Vitals",
@@ -57,6 +62,8 @@ const services = [
       "SEO Crawl",
       "Accessibility",
     ],
+    bgImage:
+      "https://images.pexels.com/photos/207580/pexels-photo-207580.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
   },
   {
     id: "marketing",
@@ -64,18 +71,34 @@ const services = [
     description: "Data-driven growth strategies and content.",
     icon: TrendingUp,
     gradient: "from-emerald-500 to-teal-600",
-    layout: "md:col-span-2", // Wide Card
     href: "/Services#digital-marketing",
+    badge: "Data-driven results",
+    bgImage:
+      "https://images.pexels.com/photos/7567236/pexels-photo-7567236.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
+  },
+  {
+    id: "uiux",
+    title: "UI/UX Design & Branding",
+    description: "Pixel-perfect interfaces and unforgettable UX.",
+    icon: Palette,
+    gradient: "from-rose-500 to-pink-600",
+    href: "/Services#uiux-design",
+    badge: "Figma-first workflow",
+    bgImage:
+      "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
+  },
+  {
+    id: "devops",
+    title: "Cloud & DevOps",
+    description: "Scalable infrastructure, CI/CD, and 24/7 reliability.",
+    icon: Cloud,
+    gradient: "from-sky-500 to-indigo-600",
+    href: "/Services#cloud-devops",
+    badge: "AWS · Vercel · Docker",
+    bgImage:
+      "https://images.pexels.com/photos/4508751/pexels-photo-4508751.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
   },
 ];
-
-// Standalone decorative image tile that fills the empty grid slot
-// left over next to the Digital Marketing card. Not part of any
-// service card — purely visual.
-const fillerImage = {
-  src: "https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1",
-  alt: "Team collaborating on a digital project",
-};
 
 // --- Component: Spotlight Card Wrapper ---
 function CardWrapper({ className, children }) {
@@ -90,12 +113,12 @@ function CardWrapper({ className, children }) {
 
   return (
     <div
-      className={cn("group relative", className)}
+      className={cn("group relative h-full", className)}
       onMouseMove={handleMouseMove}
     >
       {/* Spotlight Gradient */}
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 z-20"
         style={{
           background: useMotionTemplate`
             radial-gradient(
@@ -117,44 +140,51 @@ const ServiceCard = ({ service, index }) => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <CardWrapper className={cn(service.layout, "h-full")}>
+    <CardWrapper>
       <Link to={service.href} className="block h-full">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: index * 0.1 }}
-          className="relative h-full bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-colors duration-300"
+          transition={{ duration: 0.6, delay: index * 0.08 }}
+          className="relative h-full min-h-[220px] bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-colors duration-300"
         >
+          {/* Background Image — subtle, text-safe */}
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-[0.32] group-hover:opacity-[0.45] group-hover:scale-105 transition-all duration-500"
+            style={{ backgroundImage: `url(${service.bgImage})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-950/30 via-gray-950/65 to-gray-950/90" />
+
           {/* Gradient Top Bar */}
           <div
-            className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient}`}
+            className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient} z-10`}
           />
 
-          <div className="p-8 h-full flex flex-col relative z-10">
+          <div className="p-5 h-full flex flex-col relative z-10">
             {/* Header */}
-            <div className="mb-6">
+            <div className="mb-3">
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.6, type: "spring" }}
-                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white shadow-lg mb-4`}
+                className={`w-9 h-9 rounded-lg bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white shadow-lg mb-3`}
               >
-                <service.icon size={24} />
+                <service.icon size={18} />
               </motion.div>
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-base font-bold text-white mb-1.5">
                 {service.title}
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-gray-300 text-xs leading-relaxed">
                 {service.description}
               </p>
             </div>
 
-            {/* Main Content Area */}
+            {/* Main Content Area — equal height across all 6 cards */}
             <div className="flex-1 flex flex-col justify-end">
               {service.details ? (
                 // Special View for Audit Card (Reveal Details)
-                <div className="space-y-3">
-                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                <div className="space-y-1.5">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
                     Key Checks
                   </div>
                   {service.details.map((detail, i) => (
@@ -162,29 +192,29 @@ const ServiceCard = ({ service, index }) => {
                       initial={{ opacity: 0, x: -10 }}
                       whileHover={{ x: 0 }}
                       key={i}
-                      className="flex items-center gap-2 text-sm text-gray-300"
+                      className="flex items-center gap-2 text-xs text-gray-200"
                     >
-                      <Zap size={14} className="text-orange-400" />
+                      <Zap size={12} className="text-orange-400" />
                       {detail}
                     </motion.div>
                   ))}
                 </div>
               ) : (
                 // Standard View for others
-                <div className="hidden group-hover:flex flex-col gap-2 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
-                  <CheckCircle2 size={20} className="text-cyan-400" />
-                  <span className="text-sm font-medium text-cyan-400">
-                    Available for Q4 2023
+                <div className="hidden group-hover:flex flex-col gap-1.5 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                  <CheckCircle2 size={16} className="text-cyan-400" />
+                  <span className="text-xs font-medium text-cyan-400">
+                    {service.badge}
                   </span>
                 </div>
               )}
             </div>
 
             {/* Arrow CTA */}
-            <motion.div className="mt-6 flex items-center gap-2 text-white/50 group-hover:text-white transition-colors">
-              <span className="text-sm font-medium">Explore</span>
+            <motion.div className="mt-3 flex items-center gap-2 text-white/60 group-hover:text-white transition-colors">
+              <span className="text-xs font-medium">Explore</span>
               <ArrowRight
-                size={16}
+                size={14}
                 className="group-hover:translate-x-1 transition-transform"
               />
             </motion.div>
@@ -192,31 +222,6 @@ const ServiceCard = ({ service, index }) => {
         </motion.div>
       </Link>
     </CardWrapper>
-  );
-};
-
-// --- Component: Standalone Filler Image Tile ---
-// Sits in the leftover grid slot next to Digital Marketing —
-// a separate visual element, not attached to any service card.
-const FillerImageTile = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.4 }}
-      className="relative rounded-2xl overflow-hidden border border-white/10 min-h-[200px] md:min-h-0"
-    >
-      <img
-        src={fillerImage.src}
-        alt={fillerImage.alt}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/20 to-transparent" />
-    </motion.div>
   );
 };
 
@@ -235,7 +240,7 @@ const ServiceSection = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative py-32 overflow-hidden"
+      className="relative py-16 overflow-hidden"
     >
       {/* Background Grid & Gradient */}
       <div className="absolute inset-0 bg-[#050505]">
@@ -246,33 +251,31 @@ const ServiceSection = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <motion.div style={{ y, opacity }} className="text-center mb-20">
-          <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-xs font-mono uppercase tracking-widest mb-4">
+        <motion.div style={{ y, opacity }} className="text-center mb-10">
+          <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-xs font-mono uppercase tracking-widest mb-3">
             Expertise
           </span>
-          <h2 className="font-bold text-5xl md:text-7xl text-white mb-6 tracking-tight">
+          <h2 className="font-bold text-3xl md:text-5xl text-white mb-3 tracking-tight">
             Solutions that{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
               scale.
             </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-base md:text-lg text-gray-400 max-w-xl mx-auto font-light">
             From rapid prototyping to enterprise architecture, we cover the full
             spectrum of digital product engineering.
           </p>
         </motion.div>
 
-        {/* Bento Grid Layout — original layout restored */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(280px,auto)]">
+        {/* Equal 3-column grid — all 6 cards identical size, perfectly balanced 2x3 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 auto-rows-fr">
           {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
-          {/* Standalone image filling the leftover space next to Digital Marketing */}
-          <FillerImageTile />
         </div>
 
         {/* Bottom CTA Text */}
-        <div className="mt-20 text-center">
+        <div className="mt-10 text-center">
           <p className="text-gray-500 text-sm">
             Don't see what you need?{" "}
             <a href="#contact" className="text-cyan-400 hover:underline">
