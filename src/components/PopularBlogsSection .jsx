@@ -55,7 +55,7 @@ const BlogCard = ({ blog, index }) => {
 
       {/* Main Card */}
       <Link to={`/blog/${blog.slug || blog._id}`} className="block">
-        <div className="relative bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden border border-gray-700/50 shadow-2xl transition-all duration-500 hover:border-indigo-500/50 hover:shadow-indigo-500/20">
+        <div className="relative h-130 bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden border border-gray-700/50 shadow-2xl transition-all duration-500 hover:border-indigo-500/50 hover:shadow-indigo-500/20">
           {/* Featured Image */}
           {blog.featuredImage ? (
             <div className="relative overflow-hidden">
