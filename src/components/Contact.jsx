@@ -15,10 +15,103 @@ import {
   Send,
   Building2,
   Globe,
+  Rocket,
+  Star,
+  Users,
+  ShieldCheck,
+  MessageCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// --- Fills the dead space below the form on tall viewports with a
+// trust strip + a small animated "message sent" illustration, so the
+// right column stays visually alive down to the same height as the
+// map/office column on the left instead of trailing off into black.
+const ContactAssurance = () => {
+  const stats = [
+    { icon: Clock, value: "24h", label: "Avg. Response" },
+    { icon: Users, value: "100+", label: "Projects Shipped" },
+    { icon: Star, value: "5.0", label: "Client Rating" },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
+      className="mt-12"
+    >
+      {/* Trust strip */}
+      <div className="grid grid-cols-3 gap-4 mb-10">
+        {stats.map(({ icon: Icon, value, label }) => (
+          <div
+            key={label}
+            className="bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-800 px-4 py-6 text-center hover:border-cyan-500/40 transition-colors"
+          >
+            <Icon className="w-6 h-6 text-cyan-400 mx-auto mb-3" />
+            <p className="text-2xl font-black text-white">{value}</p>
+            <p className="text-xs text-gray-500 mt-1">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Illustration card */}
+      <div className="relative rounded-3xl border border-gray-800 bg-gradient-to-br from-gray-900/60 to-black p-10 overflow-hidden">
+        {/* Ambient glow blobs */}
+        <motion.div
+          className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-cyan-500/20 blur-3xl"
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl"
+          animate={{ scale: [1.2, 1, 1.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <div className="relative flex flex-col items-center text-center">
+          {/* Orbiting sparkles around a paper-plane badge */}
+          <div className="relative w-28 h-28 mb-6">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 opacity-20 blur-xl" />
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-gray-900/80 border border-white/10">
+              <motion.div
+                animate={{ x: [0, 4, 0], y: [0, -4, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Send className="w-10 h-10 text-cyan-400" />
+              </motion.div>
+            </div>
+            <motion.div
+              className="absolute inset-0"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-4 h-4 text-purple-400 absolute top-0 left-1/2 -translate-x-1/2" />
+              <Star className="w-3.5 h-3.5 text-pink-400 absolute bottom-1 right-1" />
+              <ShieldCheck className="w-4 h-4 text-cyan-400 absolute bottom-2 left-0" />
+            </motion.div>
+          </div>
+
+          <h3 className="text-2xl font-bold text-white mb-3">
+            Every project starts with a conversation
+          </h3>
+          <p className="text-gray-400 max-w-sm mb-6">
+            Real strategists read every message — no bots, no auto-replies.
+            You'll hear from a human who's ready to talk specifics.
+          </p>
+
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <MessageCircle className="w-4 h-4 text-cyan-400" />
+            <span>Prefer chat? Reach us on WhatsApp anytime.</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -407,6 +500,10 @@ export default function ContactPage() {
                   </motion.p>
                 )}
               </form>
+
+              {/* Fills the empty space below the button with trust stats
+                  + a small animated illustration instead of dead black space */}
+              <ContactAssurance />
             </motion.div>
           </div>
         </section>

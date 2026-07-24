@@ -29,7 +29,7 @@ export default function Hero() {
       setStats({
         projects: 50,
         clients: 35,
-        rating: 4.8,
+        rating: 5,
         uptime: 99.9,
       });
     }, 800);
@@ -47,7 +47,7 @@ export default function Hero() {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black pt-20 pb-10">
         {/* Background Video */}
         <video
           src="/logo2.mp4"
@@ -106,7 +106,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mb-8 flex flex-wrap justify-center items-center gap-4 text-sm"
+            className="mb-6 flex flex-wrap justify-center items-center gap-4 text-sm"
           >
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
               <Globe className="w-4 h-4 text-cyan-400" />
@@ -144,7 +144,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mt-6 text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-light"
+            className="mt-4 text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-light"
           >
             We build{" "}
             <span className="text-cyan-400 font-bold">
@@ -159,7 +159,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
           >
             {[
               {
@@ -185,7 +185,7 @@ export default function Hero() {
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.05 }}
-                className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+                className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10"
               >
                 <stat.icon className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
                 <div className="text-4xl font-bold text-white">
@@ -202,7 +202,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
-            className="mt-16"
+            className="mt-10"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}

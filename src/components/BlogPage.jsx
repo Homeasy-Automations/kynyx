@@ -8,7 +8,15 @@ import { debounce } from "lodash";
 import { API_URL } from "../../constant";
 import MDEditor from "@uiw/react-md-editor";
 import { FaSearch, FaClock, FaUser } from "react-icons/fa";
-import { Sparkles, ArrowRight, Zap } from "lucide-react";
+import {
+  Sparkles,
+  ArrowRight,
+  Zap,
+  Mail,
+  Send,
+  Compass,
+  MessageSquarePlus,
+} from "lucide-react";
 
 const normalizeMarkdown = (content) => content?.replace(/\\n/g, "\n") || "";
 
@@ -19,6 +27,7 @@ export default function UltimateBlog() {
   const [filters, setFilters] = useState({ search: "", category: "", tag: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   const blogsPerPage = 9;
 
   const navigate = useNavigate();
@@ -82,7 +91,23 @@ export default function UltimateBlog() {
     currentPage * blogsPerPage
   );
 
-  
+  // How many trailing grid cells are empty on the LAST page, per breakpoint
+  // (md = 2 cols, xl = 3 cols). Used to decide which filler cards to show
+  // and at which breakpoints, so the grid never trails off into blank space.
+  const isLastPage = currentPage === totalPages;
+  const n = currentBlogs.length;
+  const remainderMd = isLastPage ? (2 - (n % 2)) % 2 : 0;
+  const remainderXl = isLastPage ? (3 - (n % 3)) % 3 : 0;
+
+  const fillerVisibility = (position) => {
+    const showAtMd = remainderMd >= position;
+    const showAtXl = remainderXl >= position;
+    return [
+      "hidden",
+      showAtMd ? "md:flex" : "md:hidden",
+      showAtXl ? "xl:flex" : "xl:hidden",
+    ].join(" ");
+  };
 
   if (loading) {
     return (
@@ -170,8 +195,6 @@ export default function UltimateBlog() {
                 <option value="Marketing">Marketing</option>
                 <option value="Tutorials">Tutorials</option>
               </select>
-
-              
             </div>
           </motion.div>
         </div>
@@ -198,6 +221,16 @@ export default function UltimateBlog() {
                   />
                 ))}
               </AnimatePresence>
+
+              {/* Filler cards — only appear on the last page, and only at
+                  the breakpoints where the row would otherwise trail off
+                  into empty space. */}
+              <NewsletterFillerCard
+                className={fillerVisibility(1)}
+                email={newsletterEmail}
+                onEmailChange={setNewsletterEmail}
+              />
+              <ExploreFillerCard className={fillerVisibility(2)} />
             </div>
           )}
 
@@ -226,6 +259,99 @@ export default function UltimateBlog() {
     </>
   );
 }
+
+// Filler card 1: newsletter capture — fills a single leftover grid slot
+const NewsletterFillerCard = ({ className, email, onEmailChange }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 60 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7 }}
+    className={`${className} flex-col justify-center relative rounded-3xl overflow-hidden border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-gray-900/80 to-purple-500/10 backdrop-blur-3xl p-10 h-full`}
+  >
+    <motion.div
+      className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-cyan-500/20 blur-3xl"
+      animate={{ scale: [1, 1.2, 1] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+    />
+    <div className="relative">
+      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/30">
+        <Mail className="w-7 h-7 text-white" />
+      </div>
+      <h3 className="text-2xl font-bold text-white mb-3">
+        Don't miss the next drop
+      </h3>
+      <p className="text-gray-400 mb-8">
+        New articles on dev, design & growth — straight to your inbox, no spam.
+      </p>
+
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="flex items-center gap-2 bg-gray-900/70 border border-gray-700 rounded-2xl p-2 focus-within:border-cyan-500 transition-colors"
+      >
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => onEmailChange(e.target.value)}
+          placeholder="you@email.com"
+          className="flex-1 bg-transparent px-4 py-2 text-white placeholder-gray-500 focus:outline-none text-sm"
+        />
+        <button
+          type="submit"
+          className="p-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:scale-105 transition-transform"
+          aria-label="Subscribe"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      </form>
+    </div>
+  </motion.div>
+);
+
+// Filler card 2: explore / suggest — fills a second leftover grid slot
+const ExploreFillerCard = ({ className }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 60 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7, delay: 0.1 }}
+    className={`${className} flex-col justify-center relative rounded-3xl overflow-hidden border border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-gray-900/80 to-pink-500/10 backdrop-blur-3xl p-10 h-full`}
+  >
+    <motion.div
+      className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl"
+      animate={{ scale: [1.2, 1, 1.2] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+    />
+    <div className="relative">
+      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/30">
+        <Compass className="w-7 h-7 text-white" />
+      </div>
+      <h3 className="text-2xl font-bold text-white mb-3">
+        Want something specific?
+      </h3>
+      <p className="text-gray-400 mb-8">
+        Browse everything we build, or tell us what you'd like us to cover
+        next.
+      </p>
+
+      <div className="flex flex-wrap gap-3">
+        <a
+          href="/services"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors"
+        >
+          Explore Services <ArrowRight className="w-4 h-4" />
+        </a>
+        <a
+          href="/contact"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-sm font-semibold hover:bg-purple-500/30 transition-colors"
+        >
+          <MessageSquarePlus className="w-4 h-4" /> Suggest a Topic
+        </a>
+      </div>
+    </div>
+  </motion.div>
+);
 
 // 3D Tilt Card – Pure JSX, No Errors
 const BlogCard = ({ blog, index, isHovered, onHover, onLeave, onClick }) => {

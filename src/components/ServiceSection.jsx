@@ -90,10 +90,10 @@ const ServiceCard = ({ service, index }) => {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60, rotateX: -20 }}
+      initial={{ opacity: 0, y: 40, rotateX: -20 }}
       animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
-      whileHover={{ y: -10 }}
+      transition={{ duration: 0.6, delay: index * 0.06, ease: "easeOut" }}
+      whileHover={{ y: -8 }}
       className="group relative h-full"
       style={{ perspective: 1000 }}
     >
@@ -101,15 +101,15 @@ const ServiceCard = ({ service, index }) => {
         {/* Glowing Orb Background */}
         <motion.div
           className={cn(
-            "absolute -inset-8 rounded-3xl blur-3xl opacity-0 group-hover:opacity-60 transition-all duration-700 bg-gradient-to-br",
+            "absolute -inset-6 rounded-3xl blur-3xl opacity-0 group-hover:opacity-60 transition-all duration-700 bg-gradient-to-br",
             service.gradient
           )}
-          animate={{ scale: [1, 1.3, 1] }}
+          animate={{ scale: [1, 1.25, 1] }}
           transition={{ duration: 4, repeat: Infinity }}
         />
 
-        {/* Glass Card */}
-        <div className="relative h-full min-h-[340px] flex flex-col bg-gray-900/70 backdrop-blur-2xl rounded-3xl p-8 border border-gray-800/50 shadow-2xl overflow-hidden">
+        {/* Glass Card — same fixed height for all 6, content fills it */}
+        <div className="relative h-full flex flex-col bg-gray-900/70 backdrop-blur-2xl rounded-3xl p-6 border border-gray-800/50 shadow-2xl overflow-hidden">
           {/* Gradient Top Bar */}
           <div
             className={cn(
@@ -120,49 +120,50 @@ const ServiceCard = ({ service, index }) => {
 
           {/* Icon with Animation */}
           <motion.div
-            className="mb-6 inline-block w-fit"
+            className="mb-4 inline-block w-fit"
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <div
               className={cn(
-                "p-4 rounded-2xl bg-gradient-to-br bg-opacity-20",
+                "p-3.5 rounded-2xl bg-gradient-to-br bg-opacity-20",
                 service.gradient
               )}
             >
-              <service.icon className="w-9 h-9 text-white" strokeWidth={2} />
+              <service.icon className="w-7 h-7 text-white" strokeWidth={2} />
             </div>
           </motion.div>
 
           {/* Content */}
-          <h3 className="text-2xl font-bold text-white mb-3 font-poppins tracking-tight">
+          <h3 className="text-xl font-bold text-white mb-2 font-poppins tracking-tight">
             {service.title}
           </h3>
-          <p className="text-gray-300 leading-relaxed font-light text-base">
+          <p className="text-gray-300 leading-relaxed font-light text-sm">
             {service.description}
           </p>
 
-          {/* Main Content Area — equal height across all 6 cards */}
+          {/* Highlights — always visible (no hover-only content), so no
+              card ever sits with empty middle space like the others */}
           <div className="flex-1 flex flex-col justify-end mt-4">
             {service.details ? (
-              <div className="space-y-2.5">
-                <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
                   Key Checks
                 </div>
                 {service.details.map((detail, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 text-base text-gray-200"
+                    className="flex items-center gap-2 text-sm text-gray-200"
                   >
-                    <Zap size={16} className="text-orange-400 shrink-0" />
+                    <Zap size={14} className="text-orange-400 shrink-0" />
                     {detail}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="hidden group-hover:flex flex-col gap-2 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
-                <CheckCircle2 size={20} className="text-cyan-400" />
-                <span className="text-base font-medium text-cyan-400">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-cyan-400 shrink-0" />
+                <span className="text-sm font-medium text-cyan-400">
                   {service.badge}
                 </span>
               </div>
@@ -170,16 +171,16 @@ const ServiceCard = ({ service, index }) => {
           </div>
 
           {/* Arrow CTA */}
-          <div className="mt-6 flex items-center gap-2 text-white/60 group-hover:text-white transition-colors">
-            <span className="text-base font-medium">Explore</span>
+          <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-white/60 group-hover:text-white transition-colors">
+            <span className="text-sm font-medium">Explore</span>
             <ArrowRight
-              size={18}
+              size={16}
               className="group-hover:translate-x-1 transition-transform"
             />
           </div>
 
           {/* Hover Sparkles */}
-          <Sparkles className="absolute top-6 right-6 w-6 h-6 text-white opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+          <Sparkles className="absolute top-5 right-5 w-5 h-5 text-white opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
         </div>
       </Link>
     </motion.div>
@@ -189,43 +190,43 @@ const ServiceCard = ({ service, index }) => {
 // --- Main Section ---
 const ServiceSection = () => {
   return (
-    <section id="services" className="relative py-32 overflow-hidden bg-black">
+    <section id="services" className="relative py-24 overflow-hidden bg-black">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-gray-900/50 to-black" />
       <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/20 via-transparent to-purple-900/10" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="text-center mb-12"
         >
           <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-xs font-mono uppercase tracking-widest mb-4">
             Expertise
           </span>
-          <h2 className="font-bold text-5xl md:text-7xl text-white mb-6 tracking-tight">
+          <h2 className="font-bold text-4xl md:text-6xl text-white mb-5 tracking-tight">
             Solutions that{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
               scale.
             </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto font-light">
             From rapid prototyping to enterprise architecture, we cover the full
             spectrum of digital product engineering.
           </p>
         </motion.div>
 
-        {/* 3-column, 2-row grid — matches reference size */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+        {/* Tight 3-column, 2-row grid — equal width/height, minimal gap */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr [&>*]:min-h-[260px]">
           {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
 
         {/* Bottom CTA Text */}
-        <div className="mt-20 text-center">
+        <div className="mt-14 text-center">
           <p className="text-gray-500 text-sm">
             Don't see what you need?{" "}
             <a href="#contact" className="text-cyan-400 hover:underline">
