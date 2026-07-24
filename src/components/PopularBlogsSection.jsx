@@ -44,7 +44,7 @@ const BlogCard = ({ blog, index }) => {
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: index * 0.2 }}
       whileHover={{ y: -12 }}
-      className="group relative"
+      className="group relative h-full"
     >
       {/* Glowing Background */}
       <motion.div
@@ -54,11 +54,11 @@ const BlogCard = ({ blog, index }) => {
       />
 
       {/* Main Card */}
-      <Link to={`/blog/${blog.slug || blog._id}`} className="block">
-        <div className="relative bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden border border-gray-700/50 shadow-2xl transition-all duration-500 hover:border-indigo-500/50 hover:shadow-indigo-500/20">
+      <Link to={`/blog/${blog.slug || blog._id}`} className="block h-full">
+        <div className="relative h-full flex flex-col bg-gray-800/70 backdrop-blur-xl rounded-3xl overflow-hidden border border-gray-700/50 shadow-2xl transition-all duration-500 hover:border-indigo-500/50 hover:shadow-indigo-500/20">
           {/* Featured Image */}
           {blog.featuredImage ? (
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden shrink-0">
               <motion.img
                 src={blog.featuredImage}
                 alt={blog.title}
@@ -73,13 +73,13 @@ const BlogCard = ({ blog, index }) => {
               </div>
             </div>
           ) : (
-            <div className="h-56 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center">
+            <div className="h-56 shrink-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center">
               <Sparkles className="w-16 h-16 text-indigo-400 opacity-50" />
             </div>
           )}
 
-          {/* Content */}
-          <div className="p-6 space-y-4">
+          {/* Content — flex-1 so it fills remaining height evenly across all cards */}
+          <div className="p-6 space-y-4 flex-1 flex flex-col">
             <h3 className="font-poppins font-bold text-xl md:text-2xl text-white line-clamp-2 group-hover:text-indigo-400 transition-colors">
               {blog.title}
             </h3>
@@ -105,9 +105,11 @@ const BlogCard = ({ blog, index }) => {
               {cleanContent.slice(0, 140)}...
             </p>
 
-            {/* Read More */}
+            {/* Read More — pinned to the bottom via mt-auto, so it lines
+                up at the same height on every card regardless of how
+                long the title/description is */}
             <motion.div
-              className="flex items-center gap-2 text-indigo-400 font-semibold text-sm pt-2 group-hover:gap-4 transition-all"
+              className="mt-auto flex items-center gap-2 text-indigo-400 font-semibold text-sm pt-2 group-hover:gap-4 transition-all"
             >
               <span>Read More</span>
               <ArrowRight className="w-5 h-5" />
@@ -175,13 +177,13 @@ const PopularBlogsSection = () => {
 
         {/* Blog Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
             {[1, 2, 3].map((i) => (
               <BlogSkeleton key={i} />
             ))}
           </div>
         ) : popularBlogs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
             {popularBlogs.map((blog, index) => (
               <BlogCard key={blog._id} blog={blog} index={index} />
             ))}
